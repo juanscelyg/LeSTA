@@ -49,7 +49,7 @@ void LabelGenerationNode::loadConfig(const ros::NodeHandle &nh) {
   cfg_.lidarscan_topic = nh.param<std::string>("lidar_topic", "/velodyne/points");
 
   // Timer parameters
-  cfg_.map_publish_rate = nh.param<double>("map_publish_rate", 3.0);
+  cfg_.map_publish_rate = nh.param<double>("map_publish_rate", 10.0);
   cfg_.robot_pose_update_rate = nh.param<double>("robot_pose_update_rate", 10.0);
 
   // Options
@@ -63,8 +63,9 @@ void LabelGenerationNode::initializeTimers() {
   auto map_publish_duration = ros::Duration(1.0 / cfg_.map_publish_rate);
 
   robot_pose_update_timer_ =
-      nh_.createTimer(robot_pose_update_duration, &LabelGenerationNode::updateRobotPose, this);
-  map_publish_timer_ = nh_.createTimer(map_publish_duration, &LabelGenerationNode::publishLabelMap, this);
+      nh_.createTimer(robot_pose_update_duration, &LabelGenerationNode::updateRobotPose, this, false, false);
+  map_publish_timer_ =
+      nh_.createTimer(map_publish_duration, &LabelGenerationNode::publishLabelMap, this, false, false);
 }
 
 void LabelGenerationNode::initializePubSubs() {
@@ -110,8 +111,11 @@ void LabelGenerationNode::lidarScanCallback(const sensor_msgs::PointCloud2Ptr &m
   auto scan_preprocessed = preprocessScan(scan_raw, sensor2base, base2map);
 
   // 4. Terrain mapping
-  auto sensor2map = tf_.combineTransforms(sensor2base, base2map);
-  terrainMapping(scan_preprocessed, sensor2map);
+  auto transform_sensor2map = tf_.multiplyTransforms(sensor2base, base2map);
+  Eigen::Vector3f sensor_origin(transform_sensor2map.transform.translation.x,
+                                transform_sensor2map.transform.translation.y,
+                                transform_sensor2map.transform.translation.z);
+  terrainMapping(scan_preprocessed, sensor_origin);
 
   // 5. Feature extraction
   featureExtraction(scan_preprocessed);
@@ -145,20 +149,16 @@ LabelGenerationNode::preprocessScan(const pcl::PointCloud<Laser>::Ptr &scan_raw,
   return scan_preprocessed;
 }
 
-void LabelGenerationNode::terrainMapping(const pcl::PointCloud<Laser>::Ptr &inputcloud,
-                                         const geometry_msgs::TransformStamped &sensor2map) {
+void LabelGenerationNode::terrainMapping(const pcl::PointCloud<Laser>::Ptr &cloud_input,
+                                         const Eigen::Vector3f &sensor_origin) {
 
-  // mapping
-  auto cloud_rasterized = mapper_->heightMapping(inputcloud);
-
-  // raycasting
-  Eigen::Vector3f sensorOrigin3D(sensor2map.transform.translation.x, sensor2map.transform.translation.y,
-                                 sensor2map.transform.translation.z);
-  mapper_->raycasting(sensorOrigin3D, cloud_rasterized);
+  auto cloud_rasterized = mapper_->heightMapping(cloud_input);
+  mapper_->raycasting(sensor_origin, cloud_rasterized);
 }
 
-void LabelGenerationNode::featureExtraction(const pcl::PointCloud<Laser>::Ptr &inputcloud) {
-  // TODO: Implement feature extraction
+void LabelGenerationNode::featureExtraction(const pcl::PointCloud<Laser>::Ptr &cloud_input) {
+
+  feature_extractor_->extractFeatures(mapper_->getHeightMap(), cloud_input);
 }
 
 void LabelGenerationNode::updateRobotPose(const ros::TimerEvent &event) {

@@ -64,6 +64,7 @@ public:
    * @return heightmap
    */
   const grid_map::HeightMap &getHeightMap() const { return map_; }
+  grid_map::HeightMap &getHeightMap() { return map_; }
 
   /**
    * @brief Set heightmap origin

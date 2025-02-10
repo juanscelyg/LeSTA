@@ -19,7 +19,10 @@ public:
 
   FeatureExtractor(const Config &cfg);
 
-  void extractFeatures(const grid_map::HeightMap &map); // For static map
-  void extractFeatures(const grid_map::HeightMap &map,
+  void extractFeatures(grid_map::HeightMap &map); // For static map
+  void extractFeatures(grid_map::HeightMap &map,
                        const pcl::PointCloud<Laser>::Ptr &input_scan); // For lifelong mapping
+
+private:
+  void layerInit(grid_map::HeightMap &map);
 };

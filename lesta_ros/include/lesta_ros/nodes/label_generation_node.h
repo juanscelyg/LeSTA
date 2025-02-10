@@ -42,9 +42,9 @@ private:
                                              const geometry_msgs::TransformStamped &sensor2base,
                                              const geometry_msgs::TransformStamped &base2map);
   void terrainMapping(const pcl::PointCloud<Laser>::Ptr &inputcloud,
-                      const geometry_msgs::TransformStamped &sensor2map);
+                      const Eigen::Vector3f &sensorOrigin3D);
 
-  void featureExtraction(const pcl::PointCloud<Laser>::Ptr &scan_raw);
+  void featureExtraction(const pcl::PointCloud<Laser>::Ptr &inputcloud);
 
   void updateRobotPose(const ros::TimerEvent &event);
   void publishLabelMap(const ros::TimerEvent &event);

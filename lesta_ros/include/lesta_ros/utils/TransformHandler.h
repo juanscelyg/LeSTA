@@ -31,7 +31,7 @@ public:
     }
   }
 
-  static geometry_msgs::TransformStamped combineTransforms(const geometry_msgs::TransformStamped &t1_msg,
+  static geometry_msgs::TransformStamped multiplyTransforms(const geometry_msgs::TransformStamped &t1_msg,
                                                            const geometry_msgs::TransformStamped &t2_msg) {
     tf2::Transform t1, t2;
     tf2::fromMsg(t1_msg.transform, t1);

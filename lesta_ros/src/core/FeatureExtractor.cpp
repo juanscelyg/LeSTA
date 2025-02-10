@@ -9,15 +9,35 @@
 
 #include "lesta_ros/core/FeatureExtractor.h"
 
-FeatureExtractor::FeatureExtractor(const Config &cfg) : cfg(cfg) {
+FeatureExtractor::FeatureExtractor(const Config &cfg) : cfg(cfg) {}
+
+void FeatureExtractor::layerInit(grid_map::HeightMap &map) {
+
+  // Basic feature layers
+  map.addLayer("step");
+  map.addLayer("slope");
+  map.addLayer("roughness");
+  map.addLayer("curvature");
+  map.addLayer("variance");
+
+  // Layers for visualization of normal vector
+  map.addLayer("normal_x");
+  map.addLayer("normal_y");
+  map.addLayer("normal_z");
+
+  std::vector<std::string> basic_layers{"step", "slope", "roughness", "curvature", "variance"};
+  basic_layers.push_back(grid_map::HeightMap::CoreLayers::ELEVATION);
+  // map.setBasicLayers(basic_layers);
+}
+
+void FeatureExtractor::extractFeatures(grid_map::HeightMap &map) {
+
+  layerInit(map);
   //
 }
 
-void FeatureExtractor::extractFeatures(const grid_map::HeightMap &map) {
-  // TODO: Implement feature extraction
-}
-
-void FeatureExtractor::extractFeatures(const grid_map::HeightMap &map,
+void FeatureExtractor::extractFeatures(grid_map::HeightMap &map,
                                        const pcl::PointCloud<Laser>::Ptr &input_scan) {
-  // TODO: Implement feature extraction
+
+  layerInit(map);
 }
