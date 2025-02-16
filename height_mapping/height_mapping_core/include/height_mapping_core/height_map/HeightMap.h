@@ -39,22 +39,14 @@ public:
   Matrix &getMinHeightMatrix() { return get(CoreLayers::ELEVATION_MIN); }
   Matrix &getMaxHeightMatrix() { return get(CoreLayers::ELEVATION_MAX); }
   Matrix &getVarianceMatrix() { return get(CoreLayers::VARIANCE); }
-  Matrix &getMeasurementCountMatrix() {
-    return get(CoreLayers::N_MEASUREMENTS);
-  }
+  Matrix &getMeasurementCountMatrix() { return get(CoreLayers::N_MEASUREMENTS); }
 
-  // Const versions
+  // Core layer accessors: const versions
   const Matrix &getHeightMatrix() const { return get(CoreLayers::ELEVATION); }
-  const Matrix &getMinHeightMatrix() const {
-    return get(CoreLayers::ELEVATION_MIN);
-  }
-  const Matrix &getMaxHeightMatrix() const {
-    return get(CoreLayers::ELEVATION_MAX);
-  }
+  const Matrix &getMinHeightMatrix() const { return get(CoreLayers::ELEVATION_MIN); }
+  const Matrix &getMaxHeightMatrix() const { return get(CoreLayers::ELEVATION_MAX); }
   const Matrix &getVarianceMatrix() const { return get(CoreLayers::VARIANCE); }
-  const Matrix &getMeasurementCountMatrix() const {
-    return get(CoreLayers::N_MEASUREMENTS);
-  }
+  const Matrix &getMeasurementCountMatrix() const { return get(CoreLayers::N_MEASUREMENTS); }
 
   // Cell validity checks
   bool isEmptyAt(const Index &index) const { return !isValid(index); }
@@ -67,6 +59,9 @@ public:
   float getMaxHeight() const;
   bool hasHeightValues() const;
 
+  // Basic spatial functions
+  std::vector<Position3> getNeighborHeights(const Index &index, double radius) const;
+
   bool is_initialized_{false};
 };
 
@@ -74,11 +69,9 @@ public:
 
 class HeightMapMath {
 public:
-  static float getMinVal(const grid_map::HeightMap &map,
-                         const std::string &layer);
+  static float getMinVal(const grid_map::HeightMap &map, const std::string &layer);
 
-  static float getMaxVal(const grid_map::HeightMap &map,
-                         const std::string &layer);
+  static float getMaxVal(const grid_map::HeightMap &map, const std::string &layer);
 };
 
 #endif // HEIGHT_MAP_H

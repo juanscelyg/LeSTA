@@ -1,12 +1,7 @@
 <launch>
-  <group ns="lesta">
-    <rosparam file="$(find lesta)/config/params.yaml" command="load" subst_value="true" />
-
-    <!-- Terrain Feature Extraction -->
-    <include file="$(find lesta)/launch/include/feature_extraction.launch.xml" />
-
-    <!-- Traversability prediction -->
-    <include file="$(find lesta)/launch/include/traversability_prediction.launch.xml" />
-  </group>
+  <!-- Traversability Prediction -->
+  <node pkg="lesta" type="trav_estimation_node" name="trav_estimation" output="screen" >
+    <rosparam file="$(find lesta)/config/trav_estimation_params.yaml" command="load" subst_value="true" />
+  </node>
 
 </launch>

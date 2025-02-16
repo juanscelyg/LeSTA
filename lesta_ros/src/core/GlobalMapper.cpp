@@ -7,7 +7,7 @@
  *       Email: tre0430@korea.ac.kr
  */
 
-#include "lesta_ros/core/GlobalMapper.h"
+#include "lesta/core/GlobalMapper.h"
 
 GlobalMapper::GlobalMapper(const Config &cfg) : HeightMapper(cfg) {
 

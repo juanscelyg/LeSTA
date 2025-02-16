@@ -52,7 +52,7 @@ include_directories(
 
 # Node: Label generation
 add_executable(label_generation_node 
-  src/nodes/label_generation_node.cpp
+  src/ros/label_generation_node.cpp
   src/core/HeightMapper.cpp
   src/core/GlobalMapper.cpp
   src/core/FeatureExtractor.cpp
@@ -63,18 +63,19 @@ target_link_libraries(label_generation_node
   ${catkin_LIBRARIES}
 )
 
-# Node: Label generation
-# add_executable(label_generation_node
-#   src/feature_extraction/FeatureMap.cpp
-#   src/label_generation/label_generation_node.cpp
-#   src/label_generation/LabelGeneration.cpp
-# )
-# target_link_libraries(label_generation_node
-#   ${PCL_LIBRARIES}
-#   ${catkin_LIBRARIES}
-# )
+# Node: Traversability estimation
+add_executable(trav_estimation_node
+  src/ros/trav_estimation_node.cpp
+  src/core/HeightMapper.cpp
+  src/core/FeatureExtractor.cpp
+  src/core/TraversabilityEstimator.cpp
+)
+target_link_libraries(trav_estimation_node
+  ${PCL_LIBRARIES}
+  ${catkin_LIBRARIES}
+)
 
-# # Node: Traversability prediction
+# # Node: Traversability mapping
 # add_executable(traversability_prediction_node
 #   src/traversability_prediction/traversability_prediction_node.cpp
 #   src/traversability_prediction/TraversabilityPrediction.cpp

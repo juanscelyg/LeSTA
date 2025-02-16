@@ -1,0 +1,26 @@
+node:
+  lidarscan_topic: "/velodyne/points"
+  map_publish_rate: 10.0
+  pose_update_rate: 10.0
+  remove_backpoints: true
+  debug_mode: false
+
+frame_id:
+  base_link: "base_link"
+  map: &map_frame "map" 
+
+height_mapper:
+  estimator_type: "StatMean"
+  frame_id: *map_frame
+  map_length_x: 400.0
+  map_length_y: 400.0
+  grid_resolution: 0.1
+  min_height_threshold: -0.2
+  max_height_threshold: 1.5
+
+feature_extractor:
+  pca_region_radius: 0.2
+
+label_generator:
+  footprint_radius: 0.5 # [m], assumed circular footprint
+  max_acceptable_terrain_step: 0.1 # [m], maximum traversable terrain step

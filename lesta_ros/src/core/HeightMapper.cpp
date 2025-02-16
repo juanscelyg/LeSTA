@@ -7,7 +7,7 @@
  *       Email: tre0430@korea.ac.kr
  */
 
-#include "lesta_ros/core/HeightMapper.h"
+#include "lesta/core/HeightMapper.h"
 
 HeightMapper::HeightMapper(const Config &cfg) : cfg{cfg}, heightFilter_{cfg.min_height, cfg.max_height} {
 
