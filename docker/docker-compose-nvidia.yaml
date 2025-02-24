@@ -1,0 +1,8 @@
+services:
+  lesta_nvidia:
+    extends:
+      file: docker-compose.yaml
+      service: lesta
+    environment:
+     - NVIDIA_VISIBLE_DEVICES=all
+    runtime: nvidia

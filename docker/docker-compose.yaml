@@ -1,0 +1,15 @@
+services:
+  lesta:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dev
+    stdin_open: true
+    tty: true
+    network_mode: "host"
+    volumes:
+      - ../../LeSTA:/root/catkin_ws/src/LeSTA
+      - ../../urban-traversability-dataset:/root/catkin_ws/src/urban-traversability-dataset
+    environment:
+      - ROS_IP=127.0.0.1
+    command: "/bin/bash"
